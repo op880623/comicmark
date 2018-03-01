@@ -1,1 +1,62 @@
-<h1>sss</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Hong Tai-Rong">
+
+    <title>ComicMark</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10">
+
+        <div class="page-header">
+          <h1>Comic List</h1>
+        </div>
+
+        <!-- Comic list panel -->
+        <div class="container">
+          <div class="row">
+
+            {% for comic in comics %}
+              <div class="col-md-4">
+                <div class="panel panel-default">
+
+                  <div class="panel-heading">
+                    <a href="{{ comic.url }}">{{ comic.name }}</a>
+                  </div>
+
+                  <ul class="list-group">
+                    {% for ep in comic.episodes %}
+                      <li class="list-group-item">
+                        <a href="{{ ep.url }}">第 {{ ep.index }} 話</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+
+                  <div class="panel-footer"></div>
+
+                </div>
+              </div>
+            {% endfor %}
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
