@@ -23,6 +23,9 @@ class Comic(models.Model):
         related_name = 'progress'
     )
 
+    def __str__(self):
+        return self.name
+
     @classmethod
     def new(cls, comicId):
         # create or get model
@@ -88,3 +91,6 @@ class Episode(models.Model):
     index = models.IntegerField()
     url = models.CharField(max_length = 200)
     comic = models.ForeignKey(Comic, on_delete = CASCADE)
+
+    def __str__(self):
+        return '%s 第 %s 話' % (self.comic.name, self.index)
