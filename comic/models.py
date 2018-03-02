@@ -102,6 +102,13 @@ class Comic(models.Model):
             })
         return json.dumps(records)
 
+    @classmethod
+    def json_to_progress(cls, records):
+        for record in records:
+            c = Comic.new(record['comicId'])
+            c.update(record['index'])
+
+
 class Episode(models.Model):
     index = models.IntegerField()
     url = models.CharField(max_length = 200)
