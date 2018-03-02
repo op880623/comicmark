@@ -96,6 +96,9 @@ class Comic(models.Model):
     def episodes(self):
         return Episode.objects.filter(comic = self)
 
+    def is_updated(self):
+        return len(self.episodes()) > 1
+
     @classmethod
     def json_to_progress(cls, records):
         for record in records:

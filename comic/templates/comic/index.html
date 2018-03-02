@@ -36,6 +36,9 @@
 
                   <div class="panel-heading">
                     <a href="{{ comic.url }}" target="_blank">{{ comic.name }}</a>
+                    {% if comic.is_updated %}
+                      <span class="label label-danger">更新</span>
+                    {% endif %}
                   </div>
 
                   <ul class="list-group">
