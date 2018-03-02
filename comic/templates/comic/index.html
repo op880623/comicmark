@@ -41,10 +41,11 @@
                     {% for ep in comic.episodes %}
                       <li class="list-group-item">
                         {% if ep.is_progress %}
-                          上次看到 <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
+                          <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
+                          <span class="label label-success">上次進度</span>
                         {% elif ep.is_next %}
                           <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
-                          <a href="/comic/{{ comic.comicId }}/update_progress" class="btn btn-default">看過了</a>
+                          <a href="/comic/{{ comic.comicId }}/update_progress" class="btn btn-default">看完了</a>
                         {% else %}
                           第 {{ ep.index }} 話
                         {% endif %}
