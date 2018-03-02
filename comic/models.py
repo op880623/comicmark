@@ -1,5 +1,6 @@
 import re
 import requests
+import json
 
 from django.db import models
 from django.db.models.deletion import SET_NULL, CASCADE
@@ -87,6 +88,16 @@ class Comic(models.Model):
 
     def episodes(self):
         return Episode.objects.filter(comic = self)
+
+    @classmethod
+    def progress_to_json(cls):
+        records = []
+        for comic in cls.objects.all():
+            records.append({
+                "comicId": comic.comicId,
+                "index": comic.progress.index
+            })
+        return json.dumps(records)
 
 class Episode(models.Model):
     index = models.IntegerField()
