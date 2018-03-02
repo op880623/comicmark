@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     re_path(r'^$', views.index, name='index'),
-    re_path(r'^comic/(?P<comicId>\d+)/update_progress$', views.update_progress)
+    re_path(r'^comic/(?P<comicId>\d+)/update_progress$', views.update_progress, name='update_progress')
 ]
