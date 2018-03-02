@@ -30,7 +30,7 @@ class Comic(models.Model):
     def new(cls, comicId):
         # create or get model
         if Comic.objects.filter(comicId = comicId).exists():
-            comic = Comic.objects.get(comicId = comicId)
+            return Comic.objects.get(comicId = comicId)
         else:
             comic = cls(comicId = comicId)
 
@@ -67,7 +67,8 @@ class Comic(models.Model):
             index = int(a_tag[1])
             if index >= progress:
                 if not Episode.objects.filter(index = index, comic = self).exists():
-                    e = Episode(index = index, url = a_tag[0], comic = self)
+                    url = "http://www.cartoonmad.com" + a_tag[0]
+                    e = Episode(index = index, url = url, comic = self)
                     e.save()
 
         # find progress episode
