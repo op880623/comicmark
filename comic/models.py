@@ -94,7 +94,7 @@ class Comic(models.Model):
         return None
 
     def episodes(self):
-        return Episode.objects.filter(comic = self)
+        return Episode.objects.filter(comic = self).order_by('index')
 
     def is_updated(self):
         return len(self.episodes()) > 1
