@@ -10,6 +10,7 @@
 
     <title>ComicMark</title>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" data-turbolinks-track="reload"></script>
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
@@ -46,6 +47,7 @@
                         {% elif ep.is_next %}
                           <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
                           <a href="{% url 'update_progress' comic.comicId %}" class="btn btn-default">看完了</a>
+                          <div class="read-now btn btn-default">現在看</div>
                         {% else %}
                           第 {{ ep.index }} 話
                         {% endif %}
@@ -65,6 +67,8 @@
       </div>
     </div>
   </div>
+
+  <script src="{% static 'comic.js' %}"></script>
 </body>
 
 </html>
