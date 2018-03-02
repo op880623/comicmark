@@ -80,6 +80,8 @@ class Comic(models.Model):
                     self.updateTime = timezone.now()
 
         # find progress episode
+        while not Episode.objects.filter(index = progress, comic = self).exists():
+            progress += 1
         self.progress = Episode.objects.filter(index = progress, comic = self).get()
 
         # find newest episode
