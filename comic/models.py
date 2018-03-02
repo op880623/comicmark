@@ -10,7 +10,7 @@ class Comic(models.Model):
     comicId = models.IntegerField(primary_key = True)
     name = models.CharField(max_length = 100)
     url = models.CharField(max_length = 200)
-    updateTime = models.DateTimeField(default = timezone.now())
+    updateTime = models.DateTimeField()
     newest = models.ForeignKey(
         'Episode',
         blank = True,
@@ -49,6 +49,7 @@ class Comic(models.Model):
         comic.name = re.search(pattern, page.text).group(1)
 
         # save and return
+        comic.updateTime = timezone.now()
         comic.save()
         return comic
 
