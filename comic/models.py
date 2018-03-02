@@ -95,3 +95,11 @@ class Episode(models.Model):
 
     def __str__(self):
         return '%s 第 %s 話' % (self.comic.name, self.index)
+
+    def is_progress(self):
+        if self == self.comic.progress:
+            return True
+
+    def is_next(self):
+        if self.index == self.comic.progress.index + 1:
+            return True

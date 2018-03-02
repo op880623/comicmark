@@ -34,13 +34,20 @@
                 <div class="panel panel-default">
 
                   <div class="panel-heading">
-                    <a href="{{ comic.url }}">{{ comic.name }}</a>
+                    <a href="{{ comic.url }}" target="_blank">{{ comic.name }}</a>
                   </div>
 
                   <ul class="list-group">
                     {% for ep in comic.episodes %}
                       <li class="list-group-item">
-                        <a href="{{ ep.url }}">第 {{ ep.index }} 話</a>
+                        {% if ep.is_progress %}
+                          上次看到 <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
+                          <!-- <a href="{{ ep.url }}" class="btn btn-default">看過了</a> -->
+                        {% elif ep.is_next %}
+                          <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
+                        {% else %}
+                          第 {{ ep.index }} 話
+                        {% endif %}
                       </li>
                     {% endfor %}
                   </ul>
