@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from .models import Comic, Episode
 
 def index(request):
-    comics = Comic.objects.all()
+    comics = Comic.objects.all().order_by('-updateTime')
     return render(request, 'comic/index.html', {'comics': comics})
 
 def update_progress(request, comicId):

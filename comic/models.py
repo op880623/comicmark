@@ -3,12 +3,14 @@ import requests
 import json
 
 from django.db import models
+from django.utils import timezone
 from django.db.models.deletion import SET_NULL, CASCADE
 
 class Comic(models.Model):
     comicId = models.IntegerField(primary_key = True)
     name = models.CharField(max_length = 100)
     url = models.CharField(max_length = 200)
+    updateTime = models.DateTimeField(default = timezone.now())
     newest = models.ForeignKey(
         'Episode',
         blank = True,
@@ -71,6 +73,7 @@ class Comic(models.Model):
                     url = "http://www.cartoonmad.com" + a_tag[0]
                     e = Episode(index = index, url = url, comic = self)
                     e.save()
+                    self.updateTime = timezone.now()
 
         # find progress episode
         self.progress = Episode.objects.filter(index = progress, comic = self).get()
