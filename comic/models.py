@@ -60,6 +60,10 @@ class Comic(models.Model):
         except:
             progress = 0
 
+        for ep in self.episodes():
+            if ep.index < progress:
+                ep.delete()
+
         # get page
         page = requests.get(self.url)
         page.encoding = 'big5'
