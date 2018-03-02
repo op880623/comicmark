@@ -93,16 +93,6 @@ class Comic(models.Model):
         return Episode.objects.filter(comic = self)
 
     @classmethod
-    def progress_to_json(cls):
-        records = []
-        for comic in cls.objects.all():
-            records.append({
-                "comicId": comic.comicId,
-                "index": comic.progress.index
-            })
-        return json.dumps(records)
-
-    @classmethod
     def json_to_progress(cls, records):
         for record in records:
             c = Comic.new(record['comicId'])
