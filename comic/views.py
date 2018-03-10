@@ -19,3 +19,16 @@ def update_progress(request, comicId):
         index = comic.progress.index - 1
     ).delete()
     return redirect('index')
+
+def add_comic(request):
+    try:
+        comicId = int(request.GET.get('comicId'))
+    except:
+        return redirect('index')
+    try:
+        progress = int(request.GET.get('progress'))
+    except:
+        progress = None
+    comic = Comic.new(comicId)
+    comic.update(progress)
+    return redirect('index')

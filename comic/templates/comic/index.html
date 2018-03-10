@@ -18,13 +18,27 @@
 </head>
 
 <body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+
+      <div class="navbar-header">
+        <a class="navbar-brand" href="">Comic Mark</a>
+      </div>
+
+      <div class="collapse navbar-collapse">
+        <form class="navbar-form navbar-left" action="{% url 'add_comic' %}">
+          <input type="text" class="form-control" name="comicId" maxlength="10" required placeholder="comicId">
+          <input type="text" class="form-control" name="progress" maxlength="10" placeholder="progress">
+          <button class="btn btn-default" type="submit">Add</button>
+        </form>
+      </div>
+
+    </div>
+  </nav>
+
   <div class="container">
     <div class="row">
       <div class="col-md-10">
-
-        <div class="page-header">
-          <h1>Comic List</h1>
-        </div>
 
         <!-- Comic list panel -->
         <div class="container">
