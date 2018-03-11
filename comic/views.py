@@ -9,15 +9,12 @@ def index(request):
 
 def update_progress(request, comicId):
     comic = Comic.objects.get(comicId = comicId)
-    comic.progress = Episode.objects.get(
-        comic = comic,
-        index = comic.progress.index + 1
-    )
+    if comic.progress:
+        comic.progress = comic.episode(comic.progress.index + 1)
+        comic.episode(comic.progress.index - 1).delete()
+    else:
+        comic.progress = comic.episodes().first()
     comic.save()
-    Episode.objects.get(
-        comic = comic,
-        index = comic.progress.index - 1
-    ).delete()
     return redirect('index')
 
 def add_comic(request):
