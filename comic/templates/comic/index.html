@@ -26,9 +26,10 @@
       </div>
 
       <div class="collapse navbar-collapse">
-        <form class="navbar-form navbar-left" action="{% url 'add_comic' %}">
-          <input type="text" class="form-control" name="comicId" maxlength="10" required placeholder="comicId">
-          <input type="text" class="form-control" name="progress" maxlength="10" placeholder="progress">
+        <form class="navbar-form navbar-left" action="{% url 'add_comic' %}" method="post">
+          {% csrf_token %}
+          <input type="number" class="form-control" name="comicId" max="100000" required placeholder="comicId">
+          <input type="number" class="form-control" name="progress" max="100000" placeholder="progress">
           <button class="btn btn-default" type="submit">Add</button>
         </form>
       </div>
