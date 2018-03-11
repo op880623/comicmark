@@ -8,7 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         records = []
-        for comic in Comic.objects.all():
+        for comic in Comic.objects.all().order_by('updateTime'):
             records.append({
                 "comicId": comic.comicId,
                 "index": comic.progress.index
