@@ -55,11 +55,12 @@ class Comic(models.Model):
 
     def update(self, progress = None):
         # determine progress number
-        try:
-            if progress is None:
-                progress = self.progress.index
-        except:
-            progress = 0
+        if isinstance(progress, int):
+            pass
+        elif self.progress:
+            progress = self.progress.index
+        else:
+            progress = -100
 
         for ep in self.episodes():
             if ep.index < progress:
@@ -73,28 +74,27 @@ class Comic(models.Model):
         pattern = 'href=(/comic/%s(\d{4})\d{7}.html)' % str(self.comicId)
         for a_tag in re.findall(pattern, page.text):
             index = int(a_tag[1])
-            if index >= progress:
-                if not Episode.objects.filter(index = index, comic = self).exists():
-                    url = "http://www.cartoonmad.com" + a_tag[0]
-                    e = Episode(index = index, url = url, comic = self)
-                    e.save()
-                    self.updateTime = timezone.now()
+            if index >= progress and not self.episode(index):
+                url = "http://www.cartoonmad.com" + a_tag[0]
+                e = Episode(index = index, url = url, comic = self)
+                e.save()
+                self.updateTime = timezone.now()
 
         # find progress episode
-        while not Episode.objects.filter(index = progress, comic = self).exists():
-            progress += 1
-        self.progress = Episode.objects.filter(index = progress, comic = self).get()
+        self.progress = self.episode(progress)
 
         # find newest episode
-        newest = 0
-        for ep in Episode.objects.filter(comic = self):
-            if ep.index > newest:
-                newest = ep.index
-        self.newest = Episode.objects.filter(index = newest, comic = self).get()
+        self.newest = self.episodes().last()
 
         # save and return
         self.save()
         return None
+
+    def episode(self, index):
+        if Episode.objects.filter(index = index, comic = self).exists():
+            return Episode.objects.filter(index = index, comic = self).get()
+        else:
+            return None
 
     def episodes(self):
         return Episode.objects.filter(comic = self).order_by('index')
@@ -122,5 +122,9 @@ class Episode(models.Model):
             return True
 
     def is_next(self):
-        if self.index == self.comic.progress.index + 1:
-            return True
+        if self.comic.progress:
+            if self.index == self.comic.progress.index + 1:
+                return True
+        else:
+            if not self.comic.episode(self.index-1):
+                return True
