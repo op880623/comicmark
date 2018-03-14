@@ -29,3 +29,8 @@ def add_comic(request):
     comic = Comic.new(comicId)
     comic.update(progress)
     return redirect('index')
+
+def delete_comic(request, comicId):
+    comic = Comic.objects.get(comicId = comicId)
+    comic.delete()
+    return redirect('index')

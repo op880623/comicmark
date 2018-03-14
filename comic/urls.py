@@ -13,5 +13,10 @@ urlpatterns = [
         r'^comic$',
         views.add_comic,
         name = 'add_comic'
+    ),
+    re_path(
+        r'^comic/(?P<comicId>\d+)$',
+        views.delete_comic,
+        name = 'delete_comic'
     )
 ]
