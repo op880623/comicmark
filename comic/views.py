@@ -4,8 +4,17 @@ from django.http import HttpResponse
 from .models import Comic, Episode
 
 def index(request):
-    comics = Comic.objects.all().order_by('-updateTime')
-    return render(request, 'comic/index.html', {'comics': comics})
+    updated = []
+    unupdated = []
+    for comic in Comic.objects.all().order_by('-updateTime'):
+        if comic.is_updated():
+            updated.append(comic)
+        else:
+            unupdated.append(comic)
+    return render(request, 'comic/index.html',
+        {'updated': updated, 'unupdated': unupdated})
+    # comics = Comic.objects.all().order_by('-updateTime')
+    # return render(request, 'comic/index.html', {'comics': comics})
 
 def update_progress(request, comicId):
     comic = Comic.objects.get(comicId = comicId)

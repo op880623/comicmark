@@ -4,18 +4,33 @@
 
 <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Hong Tai-Rong">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Hong Tai-Rong">
 
-    <title>ComicMark</title>
+  <title>ComicMark</title>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" data-turbolinks-track="reload"></script>
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+      data-turbolinks-track="reload"></script>
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous">
+  </script>
 
-    <link rel="shortcut icon" type="image/png" href="{% static 'icon.png' %}">
+  <link rel="shortcut icon" type="image/png" href="{% static 'icon.png' %}">
 
 </head>
 
@@ -40,54 +55,91 @@
   </nav>
 
   <div class="container">
-    <div class="row">
-      <div class="col-md-10">
 
-        <!-- Comic list panel -->
-        <div class="container">
-          <div class="row">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="updated-tab" data-toggle="tab" href="#updated"
+            role="tab" aria-controls="updated" aria-selected="true">已更新
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="unupdated-tab" data-toggle="tab" href="#unupdated"
+            role="tab" aria-controls="unupdated" aria-selected="false">已看完
+        </a>
+      </li>
+    </ul>
 
-            {% for comic in comics %}
-              <div class="col-md-4">
-                <div class="panel panel-default">
+    <div class="tab-content" id="tabContent">
 
-                  <div class="panel-heading">
-                    <a href="{{ comic.url }}" target="_blank">{{ comic.name }}</a>
-                    {% if comic.is_updated %}
-                      <span class="label label-danger">更新</span>
-                    {% endif %}
-                    <button class="close">&times;</button>
-                    <a href="{% url 'delete_comic' comic.comicId %}"></a>
-                  </div>
+      <div class="tab-pane fade show active" id="updated" role="tabpanel"
+          aria-labelledby="updated-tab">
+        <div class="card-columns">
+          {% for comic in updated %}
+          <div class="card border-primary">
 
-                  <ul class="list-group">
-                    {% for ep in comic.episodes %}
-                      <li class="list-group-item">
-                        {% if ep.is_progress %}
-                          <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
-                          <span class="label label-success">上次進度</span>
-                        {% elif ep.is_next %}
-                          <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
-                          <a href="{% url 'update_progress' comic.comicId %}" class="btn btn-default">看完了</a>
-                          <div class="read-now btn btn-default">現在看</div>
-                        {% else %}
-                          第 {{ ep.index }} 話
-                        {% endif %}
-                      </li>
-                    {% endfor %}
-                  </ul>
+            <div class="card-header">
+              <a href="{{ comic.url }}" target="_blank">{{ comic.name }}</a>
+              <span class="badge badge-danger">更新</span>
+              <button class="close">&times;</button>
+              <a href="{% url 'delete_comic' comic.comicId %}"></a>
+            </div>
 
-                  <div class="panel-footer">更新時間：{{ comic.updateTime|timesince }}</div>
+            <ul class="list-group">
+              {% for ep in comic.episodes %}
+              <li class="list-group-item">
+                {% if ep.is_progress %}
+                  <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
+                  <span class="badge badge-success">上次進度</span>
+                {% elif ep.is_next %}
+                  <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
+                  <a href="{% url 'update_progress' comic.comicId %}"
+                      class="btn btn-outline-primary">看完了</a>
+                  <div class="read-now btn btn-outline-primary">現在看</div>
+                {% else %}
+                  <h6>第 {{ ep.index }} 話</h6>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
 
-                </div>
-              </div>
-            {% endfor %}
+            <div class="card-footer">更新時間：{{ comic.updateTime|timesince }}</div>
 
           </div>
+          {% endfor %}
         </div>
-
       </div>
+
+      <div class="tab-pane fade" id="unupdated" role="tabpanel"
+          aria-labelledby="unupdated-tab">
+        <div class="card-columns">
+          {% for comic in unupdated %}
+          <div class="card border-primary">
+
+            <div class="card-header">
+              <a href="{{ comic.url }}" target="_blank">{{ comic.name }}</a>
+              <button class="close">&times;</button>
+              <a href="{% url 'delete_comic' comic.comicId %}"></a>
+            </div>
+
+            <ul class="list-group">
+              {% for ep in comic.episodes %}
+              <li class="list-group-item">
+                <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
+                <span class="badge badge-success">上次進度</span>
+              </li>
+              {% endfor %}
+            </ul>
+
+            <div class="card-footer">更新時間：{{ comic.updateTime|timesince }}</div>
+
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
     </div>
+
+
   </div>
 
   <script src="{% static 'comic.js' %}"></script>
