@@ -31,27 +31,34 @@
   </script>
 
   <link rel="shortcut icon" type="image/png" href="{% static 'icon.png' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'comic.css' %}">
 
 </head>
 
 <body>
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
+  <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
 
-      <div class="navbar-header">
-        <a class="navbar-brand" href="">Comic Mark</a>
-      </div>
-
-      <div class="collapse navbar-collapse">
-        <form class="navbar-form navbar-left" action="{% url 'add_comic' %}" method="post">
-          {% csrf_token %}
-          <input type="number" class="form-control" name="comicId" max="100000" required placeholder="comicId">
-          <input type="number" class="form-control" name="progress" max="100000" placeholder="progress">
-          <button class="btn btn-default" type="submit">Add</button>
-        </form>
-      </div>
-
+    <div class="navbar-header">
+      <a class="navbar-brand text-white" href="#">Comic Mark</a>
     </div>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+        data-target="#navbarToggler" aria-controls="navbarToggler"
+        aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarToggler">
+      <form class="form-inline" action="{% url 'add_comic' %}" method="post">
+        {% csrf_token %}
+        <input type="number" class="form-control mr-sm-2" name="comicId"
+            max="100000" required placeholder="comicId">
+        <input type="number" class="form-control mr-sm-2" name="progress"
+            max="100000" placeholder="progress">
+        <button class="btn btn-outline-light my-sm-0" type="submit">Add</button>
+      </form>
+    </div>
+
   </nav>
 
   <div class="container">
@@ -75,7 +82,7 @@
           aria-labelledby="updated-tab">
         <div class="card-columns">
           {% for comic in updated %}
-          <div class="card border-primary">
+          <div class="card border-dark">
 
             <div class="card-header">
               <a href="{{ comic.url }}" target="_blank">{{ comic.name }}</a>
@@ -92,9 +99,12 @@
                   <span class="badge badge-success">上次進度</span>
                 {% elif ep.is_next %}
                   <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
-                  <a href="{% url 'update_progress' comic.comicId %}"
-                      class="btn btn-outline-primary">看完了</a>
-                  <div class="read-now btn btn-outline-primary">現在看</div>
+                  <div class="btn-group" role="group">
+                    <a href="{% url 'update_progress' comic.comicId %}"
+                      class="btn btn-outline-dark">看完了
+                    </a>
+                    <button class="read-now btn btn-outline-dark">現在看</button>
+                  </div>
                 {% else %}
                   <h6>第 {{ ep.index }} 話</h6>
                 {% endif %}
@@ -113,7 +123,7 @@
           aria-labelledby="unupdated-tab">
         <div class="card-columns">
           {% for comic in unupdated %}
-          <div class="card border-primary">
+          <div class="card border-dark">
 
             <div class="card-header">
               <a href="{{ comic.url }}" target="_blank">{{ comic.name }}</a>
