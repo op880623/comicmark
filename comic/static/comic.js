@@ -1,7 +1,7 @@
 $(document).ready(function() {
-  $("div.read-now").click(function(event) {
+  $("button.read-now").click(function(event) {
+    event.target.parentElement.parentElement.children[0].click();
     event.target.parentElement.children[0].click();
-    event.target.parentElement.children[1].click();
   });
 
   $("button.close").click(function(event) {
