@@ -71,12 +71,16 @@ class Comic(models.Model):
         page.encoding = 'big5'
 
         # build episodes
-        pattern = 'href=(/comic/%s(\d{4})\d{7}.html)' % str(self.comicId)
+        pattern = 'href=(/comic/%s(\d{4})(\d)\d{6}.html)' % str(self.comicId)
         for a_tag in re.findall(pattern, page.text):
             index = int(a_tag[1])
             if index >= progress and not self.episode(index):
                 url = "http://www.cartoonmad.com" + a_tag[0]
-                e = Episode(index = index, url = url, comic = self)
+                if a_tag[2] == '2':
+                    unit = '話'
+                else:
+                    unit = '卷'
+                e = Episode(index = index, url = url, unit = unit, comic = self)
                 e.save()
                 self.updateTime = timezone.now()
 
@@ -112,10 +116,11 @@ class Comic(models.Model):
 class Episode(models.Model):
     index = models.IntegerField()
     url = models.CharField(max_length = 200)
+    unit = models.CharField(max_length = 10, default = '話')
     comic = models.ForeignKey(Comic, on_delete = CASCADE)
 
     def __str__(self):
-        return '%s 第 %s 話' % (self.comic.name, self.index)
+        return '%s 第 %s %s' % (self.comic.name, self.index, self.unit)
 
     def is_progress(self):
         if self == self.comic.progress:

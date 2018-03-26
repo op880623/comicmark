@@ -96,10 +96,10 @@
               {% for ep in comic.episodes %}
               <li class="list-group-item">
                 {% if ep.is_progress %}
-                  <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
+                  <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} {{ ep.unit }}</a>
                   <span class="badge badge-success">上次進度</span>
                 {% elif ep.is_next %}
-                  <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
+                  <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} {{ ep.unit }}</a>
                   <div class="btn-group" role="group">
                     <a href="{% url 'update_progress' comic.comicId %}"
                       class="btn btn-outline-dark">看完了
@@ -107,7 +107,7 @@
                     <button class="read-now btn btn-outline-dark">現在看</button>
                   </div>
                 {% else %}
-                  <h6>第 {{ ep.index }} 話</h6>
+                  <h6>第 {{ ep.index }} {{ ep.unit }}</h6>
                 {% endif %}
               </li>
               {% endfor %}
@@ -135,7 +135,7 @@
             <ul class="list-group">
               {% for ep in comic.episodes %}
               <li class="list-group-item">
-                <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} 話</a>
+                <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} {{ ep.unit }}</a>
                 <span class="badge badge-success">上次進度</span>
               </li>
               {% endfor %}
