@@ -108,6 +108,7 @@ class Comic(models.Model):
 
     @classmethod
     def json_to_progress(cls, records):
+        records = json.loads(records)
         for record in records:
             c = Comic.new(record['comicId'])
             c.update(record['index'])

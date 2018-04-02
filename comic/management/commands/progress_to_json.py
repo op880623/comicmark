@@ -9,8 +9,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         records = []
         for comic in Comic.objects.all().order_by('updateTime'):
+            if comic.progress:
+                progress = comic.progress.index
+            else:
+                progress = None
             records.append({
                 "comicId": comic.comicId,
-                "index": comic.progress.index
+                "index": progress
             })
         print(json.dumps(records))
