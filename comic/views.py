@@ -6,15 +6,13 @@ from .models import Comic, Episode
 def index(request):
     updated = []
     unupdated = []
-    for comic in Comic.objects.all().order_by('-updateTime'):
+    for comic in Comic.objects.order_by('-updateTime'):
         if comic.is_updated():
             updated.append(comic)
         else:
             unupdated.append(comic)
     return render(request, 'comic/index.html',
         {'updated': updated, 'unupdated': unupdated})
-    # comics = Comic.objects.all().order_by('-updateTime')
-    # return render(request, 'comic/index.html', {'comics': comics})
 
 def update_progress(request, comicId):
     comic = Comic.objects.get(comicId = comicId)
@@ -40,6 +38,5 @@ def add_comic(request):
     return redirect('index')
 
 def delete_comic(request, comicId):
-    comic = Comic.objects.get(comicId = comicId)
-    comic.delete()
+    Comic.objects.get(comicId = comicId).delete()
     return redirect('index')

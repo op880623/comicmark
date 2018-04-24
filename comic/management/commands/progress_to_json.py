@@ -7,14 +7,8 @@ class Command(BaseCommand):
     help = "print comicId and progress index as json string"
 
     def handle(self, *args, **options):
-        records = []
-        for comic in Comic.objects.all().order_by('updateTime'):
-            if comic.progress:
-                progress = comic.progress.index
-            else:
-                progress = None
-            records.append({
-                "comicId": comic.comicId,
-                "index": progress
-            })
+        records = [{
+            "comicId": comic.comicId,
+            "index": comic.progress and comic.progress.index or None
+        } for comic in Comic.objects.order_by('updateTime').iterator()]
         print(json.dumps(records))

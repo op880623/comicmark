@@ -5,5 +5,5 @@ class Command(BaseCommand):
     help = "Update all comics"
 
     def handle(self, *args, **options):
-        for comic in Comic.objects.all():
+        for comic in Comic.objects.iterator():
             comic.update()

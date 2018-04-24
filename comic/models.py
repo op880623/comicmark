@@ -57,12 +57,10 @@ class Comic(models.Model):
         # determine progress number
         if isinstance(progress, int):
             pass
-        elif self.progress:
-            progress = self.progress.index
         else:
-            progress = -100
+            progress = self.progress and self.progress.index or -100
 
-        for ep in self.episodes():
+        for ep in self.episodes().iterator():
             if ep.index < progress:
                 ep.delete()
 
@@ -72,16 +70,16 @@ class Comic(models.Model):
 
         # build episodes
         pattern = 'href=(/comic/%s(\d{4})(\d)\d{6}.html)' % str(self.comicId)
-        for a_tag in re.findall(pattern, page.text):
-            index = int(a_tag[1])
+        for a_tag in re.finditer(pattern, page.text):
+            index = int(a_tag.group(2))
             if index >= progress and not self.episode(index):
-                url = "http://www.cartoonmad.com" + a_tag[0]
-                if a_tag[2] == '2':
-                    unit = '話'
-                else:
-                    unit = '卷'
-                e = Episode(index = index, url = url, unit = unit, comic = self)
-                e.save()
+                url = "http://www.cartoonmad.com" + a_tag.group(1)
+                unit = a_tag.group(3) == '2' and '話' or '卷'
+                e = self.episode_set.create(
+                    index = index,
+                    url = url,
+                    unit = unit
+                )
                 self.updateTime = timezone.now()
 
         # find progress episode
@@ -95,16 +93,16 @@ class Comic(models.Model):
         return None
 
     def episode(self, index):
-        if Episode.objects.filter(index = index, comic = self).exists():
-            return Episode.objects.filter(index = index, comic = self).get()
+        if self.episode_set.filter(index = index).count() is 1:
+            return self.episode_set.get(index = index)
         else:
             return None
 
     def episodes(self):
-        return Episode.objects.filter(comic = self).order_by('index')
+        return self.episode_set.order_by('index')
 
     def is_updated(self):
-        return len(self.episodes()) > 1
+        return self.episode_set.count() > 1 or not self.progress
 
     @classmethod
     def json_to_progress(cls, records):
@@ -124,13 +122,10 @@ class Episode(models.Model):
         return '%s 第 %s %s' % (self.comic.name, self.index, self.unit)
 
     def is_progress(self):
-        if self == self.comic.progress:
-            return True
+        return self == self.comic.progress
 
     def is_next(self):
         if self.comic.progress:
-            if self.index == self.comic.progress.index + 1:
-                return True
+            return self.index == self.comic.progress.index + 1
         else:
-            if not self.comic.episode(self.index-1):
-                return True
+            return self == self.comic.episodes().first()
