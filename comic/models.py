@@ -25,6 +25,13 @@ class Comic(models.Model):
         on_delete = SET_NULL,
         related_name = 'progress'
     )
+    next = models.ForeignKey(
+        'Episode',
+        blank = True,
+        null = True,
+        on_delete = SET_NULL,
+        related_name = 'next'
+    )
 
     def __str__(self):
         return self.name
