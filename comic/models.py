@@ -79,7 +79,7 @@ class Comic(models.Model):
         pattern = 'href=(/comic/%s(\d{4})(\d)\d{6}.html)' % str(self.comicId)
         for a_tag in re.finditer(pattern, page.text):
             index = int(a_tag.group(2))
-            if index >= progress and not self.episode(index):
+            if index >= progress and not self.episode_exists(index):
                 url = "http://www.cartoonmad.com" + a_tag.group(1)
                 unit = a_tag.group(3) == '2' and '話' or '卷'
                 e = self.episode_set.create(
@@ -89,18 +89,25 @@ class Comic(models.Model):
                 )
                 self.updateTime = timezone.now()
 
-        # find progress episode
+        # find progress and next episode
         self.progress = self.episode(progress)
+        if self.progress:
+            self.next = self.episode(progress + 1)
+        else:
+            self.next = self.episodes().first()
 
         # find newest episode
-        self.newest = self.episodes().last()
+        self.newest = self.episodes().only('comic_id').last()
 
         # save and return
         self.save()
         return None
 
+    def episode_exists(self, index):
+        return self.episode_set.filter(index = index).count() is 1
+
     def episode(self, index):
-        if self.episode_set.filter(index = index).count() is 1:
+        if self.episode_exists(index):
             return self.episode_set.get(index = index)
         else:
             return None
@@ -132,7 +139,4 @@ class Episode(models.Model):
         return self.id == self.comic.progress_id
 
     def is_next(self):
-        if self.comic.progress:
-            return self.index == self.comic.progress.index + 1
-        else:
-            return self == self.comic.episodes().only('comic_id').first()
+        return self.id == self.comic.next_id
