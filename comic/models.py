@@ -102,7 +102,7 @@ class Comic(models.Model):
         return self.episode_set.order_by('index')
 
     def is_updated(self):
-        return self.episode_set.count() > 1 or not self.progress
+        return self.newest_id != self.progress_id
 
     @classmethod
     def json_to_progress(cls, records):
@@ -122,10 +122,10 @@ class Episode(models.Model):
         return '%s 第 %s %s' % (self.comic.name, self.index, self.unit)
 
     def is_progress(self):
-        return self == self.comic.progress
+        return self.id == self.comic.progress_id
 
     def is_next(self):
         if self.comic.progress:
             return self.index == self.comic.progress.index + 1
         else:
-            return self == self.comic.episodes().first()
+            return self == self.comic.episodes().only('comic_id').first()

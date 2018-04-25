@@ -93,7 +93,7 @@
             </div>
 
             <ul class="list-group">
-              {% for ep in comic.episodes %}
+              {% for ep in comic.episode_set.all %}
               <li class="list-group-item">
                 {% if ep.is_progress %}
                   <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} {{ ep.unit }}</a>
@@ -133,7 +133,7 @@
             </div>
 
             <ul class="list-group">
-              {% for ep in comic.episodes %}
+              {% for ep in comic.episode_set.all %}
               <li class="list-group-item">
                 <a href="{{ ep.url }}" target="_blank">第 {{ ep.index }} {{ ep.unit }}</a>
                 <span class="badge badge-success">上次進度</span>
