@@ -1,19 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.db.models import Prefetch
+from django.db.models import Prefetch, F
 
 from .models import Comic, Episode
 
 def index(request):
-    updated = []
-    unupdated = []
-    for comic in Comic.objects.order_by('-updateTime').prefetch_related(
+    comics = Comic.objects.order_by('-updateTime').prefetch_related(
         Prefetch('episode_set', queryset=Episode.objects.order_by('index'))
-    ):
-        if comic.is_updated():
-            updated.append(comic)
-        else:
-            unupdated.append(comic)
+    )
+    updated = list(comics.exclude(newest_id=F('progress_id')))
+    unupdated = list(comics.filter(newest_id=F('progress_id')))
     return render(request, 'comic/index.html',
         {'updated': updated, 'unupdated': unupdated})
 
