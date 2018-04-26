@@ -104,11 +104,12 @@ class Comic(models.Model):
         return None
 
     def episode_exists(self, index):
-        return self.episode_set.filter(index = index).count() is 1
+        return self.episode_set.filter(index = index).only('id').exists()
 
     def episode(self, index):
-        if self.episode_exists(index):
-            return self.episode_set.get(index = index)
+        episodes = self.episode_set.filter(index = index)
+        if bool(episodes):
+            return episodes[0]
         else:
             return None
 

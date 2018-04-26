@@ -8,8 +8,7 @@ def index(request):
     updated = []
     unupdated = []
     for comic in Comic.objects.order_by('-updateTime').prefetch_related(
-        Prefetch('episode_set', queryset=Episode.objects.order_by('index')),
-        Prefetch('progress', queryset=Episode.objects.only('index'))
+        Prefetch('episode_set', queryset=Episode.objects.order_by('index'))
     ):
         if comic.is_updated():
             updated.append(comic)
@@ -20,10 +19,9 @@ def index(request):
 
 def update_progress(request, comicId):
     comic = Comic.objects.get(comicId = comicId)
-    comic.progress_id = comic.next_id
+    comic.progress = comic.next
     comic.next = comic.episode(comic.next.index + 1)
-    if comic.episode_exists(comic.progress.index - 1):
-        comic.episode(comic.progress.index - 1).delete()
+    comic.episode_set.filter(index = comic.progress.index - 1).delete()
     comic.save()
     return redirect('index')
 
