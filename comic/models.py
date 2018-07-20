@@ -62,9 +62,7 @@ class Comic(models.Model):
 
     def update(self, progress = None):
         # determine progress number
-        if isinstance(progress, int):
-            pass
-        else:
+        if not isinstance(progress, int):
             progress = self.progress and self.progress.index or -100
 
         for ep in self.episodes().iterator():
