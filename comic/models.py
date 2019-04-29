@@ -45,7 +45,7 @@ class Comic(models.Model):
             comic = cls(comicId = comicId)
 
         # find url
-        domain = "http://www.cartoonmad.com"
+        domain = "https://www.cartoonmad.com"
         comicId = str(comic.comicId)
         comic.url = "%s/comic/%s.html" % (domain, comicId)
 
@@ -78,7 +78,7 @@ class Comic(models.Model):
         for a_tag in re.finditer(pattern, page.text):
             index = int(a_tag.group(2))
             if index >= progress and not self.episode_exists(index):
-                url = "http://www.cartoonmad.com" + a_tag.group(1)
+                url = "https://www.cartoonmad.com" + a_tag.group(1)
                 unit = a_tag.group(3) == '2' and '話' or '卷'
                 e = self.episode_set.create(
                     index = index,
